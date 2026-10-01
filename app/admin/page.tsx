@@ -1,0 +1,1 @@
+import {cookies} from 'next/headers';import {COOKIE,validSession} from '../../lib/auth';import Admin from './view';import Login from './login';export const dynamic='force-dynamic';export default async function Page(){return validSession((await cookies()).get(COOKIE)?.value)?<Admin/>:<Login/>}

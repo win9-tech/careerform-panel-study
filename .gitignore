@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.env*
+!.env.example
+.vercel/
+*.tsbuildinfo
+source/frontend/dist-site/
+source/frontend/.wxt/
+source/frontend/.output/
+public/assets/
+public/experiment/

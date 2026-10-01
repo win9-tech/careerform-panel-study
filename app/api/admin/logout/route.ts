@@ -1,0 +1,1 @@
+import {NextResponse} from 'next/server';import {COOKIE,sameOrigin} from '../../../../lib/auth';export async function POST(r:Request){if(!sameOrigin(r))return new Response(null,{status:403});const res=NextResponse.json({ok:true});res.cookies.set(COOKIE,'',{maxAge:0,path:'/'});return res}

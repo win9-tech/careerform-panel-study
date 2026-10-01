@@ -1,0 +1,3 @@
+import {NextResponse} from 'next/server';
+import {COOKIE,createSession,passwordValid,sameOrigin} from '../../../../lib/auth';
+export async function POST(request:Request){if(!sameOrigin(request))return new Response(null,{status:403});let p;try{const body=await request.text();if(body.length>1000)return new Response(null,{status:413});p=JSON.parse(body).password}catch{return new Response(null,{status:400})}if(typeof p!=='string'||!passwordValid(p))return Response.json({error:'관리자 암호를 확인해 주세요.'},{status:401});try{const r=NextResponse.json({ok:true});r.cookies.set(COOKIE,createSession(),{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'strict',path:'/',maxAge:8*3600});return r}catch{return Response.json({error:'관리자 로그인 설정이 필요해요.'},{status:503})}}
