@@ -6,7 +6,8 @@ export async function GET(request:Request) {
   if(!validSession((await cookies()).get(COOKIE)?.value)) return Response.json({error:"조사자만 볼 수 있어요."},{status:403,headers:{"Cache-Control":"no-store"}});
   try {
     const rows=await database()`SELECT id, received_at, payload FROM study_responses ORDER BY received_at DESC LIMIT 10000`;
-    const items=rows.map(r=>({...JSON.parse(r.payload),receivedAt:r.received_at}));
+    const version = new URL(request.url).searchParams.get("version") ?? "panel-study-v22";
+    const items=rows.map(r=>({...JSON.parse(r.payload),receivedAt:r.received_at})).filter(r=>r.version===version);
     if(new URL(request.url).searchParams.get("format")==="csv") {
       const cells=(row:unknown[])=>row.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(',');
       const lines=[cells(["response_id","received_at","version","order","variant","comfort","trust","wait","duration_ms","reduced_motion","preference"])];

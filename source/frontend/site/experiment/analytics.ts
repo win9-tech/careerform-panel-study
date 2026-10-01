@@ -8,11 +8,11 @@ export function track(event: Event, details: {variant?: string; trial?: number} 
   // Analytics cannot interrupt the experiment, even when storage/network is blocked.
   try {
     if (location.hostname !== 'careerform-panel-study.vercel.app' || !location.pathname.startsWith('/experiment')) return;
-    const marker = `panel-study-analytics-${event}-${details.trial ?? ''}`;
+    const marker = `panel-study-v22-analytics-${event}-${details.trial ?? ''}`;
     if (once && (sent.has(marker) || sessionStorage.getItem(marker))) return;
-    anonymousId ??= sessionStorage.getItem('panel-study-analytics-id') ?? crypto.randomUUID();
-    sessionStorage.setItem('panel-study-analytics-id', anonymousId);
-    const properties: Record<string, unknown> = {$process_person_profile:false,$geoip_disable:true,study_version:'panel-study-v21'};
+    anonymousId ??= sessionStorage.getItem('panel-study-v22-analytics-id') ?? crypto.randomUUID();
+    sessionStorage.setItem('panel-study-v22-analytics-id', anonymousId);
+    const properties: Record<string, unknown> = {$process_person_profile:false,$geoip_disable:true,study_version:'panel-study-v22'};
     if (['A','B','C'].includes(details.variant ?? '')) properties.variant=details.variant;
     if (Number.isInteger(details.trial) && details.trial! >= 1 && details.trial! <= 3) properties.trial=details.trial;
     if (once) { sent.add(marker); sessionStorage.setItem(marker,'1'); }

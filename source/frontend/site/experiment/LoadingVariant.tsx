@@ -35,29 +35,19 @@ export function LoadingVariant({
         지원서를 채우고 있어요
       </p>
       <div className={styles.metric}>
-        {variant === "B" ? (
-          <>
-            <p className={styles.label}>진행률</p>
-            <strong className={styles.value}>
-              {value}
-              <small>%</small>
-            </strong>
-          </>
-        ) : (
-          <p className={styles.countSentence}>
-            <span className={styles.countContext}>
-              {scenarioFields.length}개 중
-            </span>
-            <span className={styles.countMain}>
-              <strong>
-                {value}
-                <small>개</small>
-              </strong>{" "}
-              <span className={styles.countEnding}>
-                {variant === "A" ? "완료했어요" : "남았어요"}
-              </span>
-            </span>
-          </p>
+        <p className={styles.label}>
+          {variant === "A" ? "완료한 항목" : variant === "B" ? "전체 진행률" : "남은 항목"}
+        </p>
+        <strong className={styles.value}>
+          {value}
+          {variant === "A" ? (
+            <small className={styles.total}> / {scenarioFields.length}</small>
+          ) : variant === "B" ? <small>%</small> : (
+            <small className={styles.remainingEnding}>개 남았어요</small>
+          )}
+        </strong>
+        {variant === "C" && (
+          <p className={styles.totalContext}>전체 {scenarioFields.length}개 항목</p>
         )}
         <div className={styles.indicatorSlot}>
           {variant === "B" && (

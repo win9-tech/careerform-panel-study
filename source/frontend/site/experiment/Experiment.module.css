@@ -34,7 +34,7 @@
 .workspace {
   height: min(760px, calc(100dvh - 125px));
   min-height: 520px;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 1fr) clamp(360px, 36vw, 440px);
 }
 .application {
   overflow: auto;
@@ -603,4 +603,18 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+/* Identical attention treatment for every experimental variant. Keep the
+   scroll container and input DOM intact so autofill timing is unchanged. */
+.workspace[data-panel-focus="true"] > [data-form-scroll] {
+  filter: blur(3px);
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
+}
+.workspace[data-panel-focus="true"] > .sidebar {
+  position: relative;
+  z-index: 1;
+  box-shadow: -12px 0 32px rgb(89 70 55 / 10%);
 }

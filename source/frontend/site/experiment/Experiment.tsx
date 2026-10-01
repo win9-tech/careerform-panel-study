@@ -185,7 +185,8 @@ export function Experiment() {
             </li>
           </ol>
           <p className={styles.introNote}>
-            약 2~3분 · 정답 없음 · 예제 정보만 사용 · 실제 지원서 제출 없음
+            지원서보다 오른쪽 패널을 보며, 진행 상황을 얼마나 쉽게 파악할 수 있는지 체험해 주세요.
+            <br />약 2~3분 · 정답 없음 · 예제 정보만 사용 · 실제 지원서 제출 없음
             <br />진행 단계는 서비스 개선을 위해 익명으로 분석합니다. 화면 녹화와 입력값 수집은 하지 않습니다.
           </p>
           <button type="button" onClick={() => { track("study_started", {}, true); setIntroduced(true); }}>
@@ -232,7 +233,7 @@ export function Experiment() {
       </header>
       {stage === "ready" && (
         <p className={styles.notice}>
-          자동 기입을 누른 뒤 커리어폼 패널을 중심으로 살펴봐 주세요.
+          자동 기입 중에는 지원서가 흐리게 표시됩니다. 커리어폼 패널을 중심으로 살펴봐 주세요.
         </p>
       )}
       {notice && (
@@ -240,7 +241,7 @@ export function Experiment() {
           {notice}
         </p>
       )}
-      <div className={`${demo.workspace} ${styles.workspace}`}>
+      <div className={`${demo.workspace} ${styles.workspace}`} data-panel-focus={stage === "running"}>
         <ApplicationForm key={attempt} />
         <aside
           className={`${demo.sidebar} ${styles.sidebar}`}
