@@ -16,3 +16,6 @@ Admin authentication uses an HTTP-only signed 8-hour cookie. `/admin` provides v
 
 ## Checks
 `npm test` covers response validation and administrator authentication. `npm run build` builds the experiment and Next.js app. End-to-end persistence verification requires a connected Neon database.
+
+## PostHog
+Anonymous, explicit funnel events only on the canonical production experiment route: study_opened, study_started, trial_started, trial_completed, trial_rated, response_submit_started, response_submitted, response_submit_failed. Properties are restricted to study version, variant and trial index. The per-tab random analytics ID is independent from response IDs. No scores, preference, application values, administrator pages, person profiles, autocapture or session replay. GeoIP enrichment disabled; network requests omit credentials and referrer. Blocked analytics never blocks response saving. The public project ingestion token has no analytics read/admin access.

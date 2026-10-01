@@ -1,3 +1,4 @@
+import { track } from "./analytics";
 import { useEffect, useRef, useState } from "react";
 import { PanelPreview } from "../demo/PanelPreview";
 import { experimentRepository } from "./profile";
@@ -102,6 +103,7 @@ export function Experiment() {
     setReducedMotion(
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false,
     );
+    track("trial_started", {variant: study.order[study.trials.length], trial: study.trials.length + 1});
     setStage("running");
     cancel.current = startScenario({
       root: root.current,
@@ -110,6 +112,7 @@ export function Experiment() {
         duration.current = ms;
         completionTimer.current = setTimeout(() => {
           running.current = false;
+          track("trial_completed", {variant: study.order[study.trials.length], trial: study.trials.length + 1});
           setStage("complete");
         }, 400);
       },
@@ -121,6 +124,7 @@ export function Experiment() {
   };
   const rate = (ratings: Ratings) => {
     if (stage !== "survey" || duration.current < SCENARIO_DURATION_MS) return;
+    track("trial_rated", {variant: study.order[study.trials.length], trial: study.trials.length + 1}, true);
     setStudy(
       recordTrial(study, {
         variant: study.order[study.trials.length]!,
@@ -182,8 +186,9 @@ export function Experiment() {
           </ol>
           <p className={styles.introNote}>
             약 2~3분 · 정답 없음 · 예제 정보만 사용 · 실제 지원서 제출 없음
+            <br />진행 단계는 서비스 개선을 위해 익명으로 분석합니다. 화면 녹화와 입력값 수집은 하지 않습니다.
           </p>
-          <button type="button" onClick={() => setIntroduced(true)}>
+          <button type="button" onClick={() => { track("study_started", {}, true); setIntroduced(true); }}>
             안내를 읽었어요 · 체험 시작
           </button>
         </div>

@@ -1,3 +1,4 @@
+import { track } from "./analytics";
 import { useEffect, useRef, useState } from "react";
 import { LoadingVariant } from "./LoadingVariant";
 import { exportStudy, type Preference, type Study } from "./study";
@@ -37,6 +38,7 @@ export function FinalSurvey({
   }, []);
   const submit = async () => {
     if (!preference || sending.current || saved) return;
+    track("response_submit_started");
     sending.current = true; setSaving(true); setLocked(true); setMessage("");
     try {
       if (!submission.current) {
@@ -53,8 +55,10 @@ export function FinalSurvey({
       });
       const result = await response.json();
       if (!response.ok || result.saved !== true) throw new Error(result.error || "응답을 저장하지 못했어요.");
+      track("response_submitted", {}, true);
       setSaved(true); setMessage("응답이 안전하게 저장됐어요. 참여해 주셔서 감사합니다!");
     } catch (error) {
+      track("response_submit_failed");
       setMessage(`${error instanceof Error && error.name !== "TimeoutError" ? error.message : "연결이 지연되고 있어요."} 선택한 응답은 유지됩니다. 다시 저장해 주세요.`);
     } finally { sending.current=false; setSaving(false); }
   };
