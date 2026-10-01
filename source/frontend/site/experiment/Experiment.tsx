@@ -1,3 +1,4 @@
+import {StudyProgress, NextTrial} from "./StudyProgress";
 import { track } from "./analytics";
 import { useEffect, useRef, useState } from "react";
 import { PanelPreview } from "../demo/PanelPreview";
@@ -34,6 +35,7 @@ export function Experiment() {
   const [stage, setStage] = useState<
     "ready" | "running" | "complete" | "survey"
   >("ready");
+  const [betweenTrials, setBetweenTrials] = useState(false);
   const [introduced, setIntroduced] = useState(false);
   const [completed, setCompleted] = useState(0);
   const [panelOpen, setPanelOpen] = useState(true);
@@ -134,7 +136,9 @@ export function Experiment() {
       }),
     );
     reset();
+    if (study.trials.length + 1 < VARIANT_COUNT) setBetweenTrials(true);
   };
+  if (betweenTrials) return <NextTrial completed={study.trials.length} onContinue={() => {setBetweenTrials(false);setPanelOpen(true);window.scrollTo(0,0);}} />;
   if (!introduced && (study.trials.length === 0 || (import.meta.env.DEV && new URLSearchParams(location.search).get("view") === "intro")))
     return (
       <main className={`${styles.page} ${styles.onboarding}`}>
@@ -161,6 +165,7 @@ export function Experiment() {
   if (study.trials.length === VARIANT_COUNT)
     return (
       <div className={styles.page}>
+        <StudyProgress current={4} />
         <FinalSurvey
           study={study}
           onChange={(preference, reason) =>
@@ -175,11 +180,13 @@ export function Experiment() {
   if (stage === "survey")
     return (
       <div className={styles.page}>
-        <TrialSurvey onSave={rate} />
+        <StudyProgress current={study.trials.length+1} />
+        <TrialSurvey onSave={rate} trialNumber={study.trials.length+1} />
       </div>
     );
   return (
     <div className={styles.page} ref={root}>
+      <StudyProgress current={study.trials.length+1} />
       <header className={styles.studyHeader}>
         <div>
           <p>커리어폼 · 화면 체험</p>
@@ -235,15 +242,15 @@ export function Experiment() {
                       ✓
                     </span>
                     <h2 ref={heading} tabIndex={-1}>
-                      입력이 완료됐어요
+                      {ordinals[study.trials.length]} 체험 완료
                     </h2>
-                    <p>지원서의 입력 결과를 확인한 뒤 체험을 평가해 주세요.</p>
+                    <p>{study.trials.length < 2 ? `전체 3개 중 ${study.trials.length+1}번째 체험이에요. 짧게 평가한 뒤 다음 체험으로 넘어가요.` : "마지막 체험이에요. 평가한 뒤 최종 응답을 제출해 주세요."}</p>
                     <button
                       className={styles.evaluateButton}
                       type="button"
                       onClick={() => setStage("survey")}
                     >
-                      평가하기 <span aria-hidden="true">→</span>
+                      이번 체험 평가하기 <span aria-hidden="true">→</span>
                     </button>
                     <small className={styles.evaluationHint}>
                       방금 체험에 대한 세 가지 질문이에요

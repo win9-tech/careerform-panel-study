@@ -8,8 +8,10 @@ const questions = [
 ] as const;
 export function TrialSurvey({
   onSave,
+  trialNumber = 1,
 }: {
   onSave: (ratings: Ratings) => void;
+  trialNumber?: number;
 }) {
   const [ratings, setRatings] = useState<Partial<Ratings>>({});
   const answered = Object.keys(ratings).length;
@@ -34,7 +36,7 @@ export function TrialSurvey({
       }}
     >
       <header className={styles.ratingHeader}>
-        <span className={styles.ratingEyebrow}>체험 돌아보기</span>
+        <span className={styles.ratingEyebrow}>{trialNumber} / 3번째 체험 평가</span>
         <h2 tabIndex={-1} ref={heading}>
           방금 체험은 어땠나요?
         </h2>
@@ -82,7 +84,7 @@ export function TrialSurvey({
           <strong>{answered}</strong> / 3개 응답
           <span>
             {answered === 3
-              ? "모두 답했어요. 평가를 저장해 주세요."
+              ? "모두 답했어요. 아래 버튼으로 계속 진행해 주세요."
               : "세 문항에 모두 답해 주세요."}
           </span>
         </p>
@@ -90,7 +92,7 @@ export function TrialSurvey({
           type="submit"
           disabled={!ratings.comfort || !ratings.trust || !ratings.wait}
         >
-          평가 저장
+          {trialNumber < 3 ? "평가 저장하고 다음 체험으로 →" : "평가 저장하고 최종 선택으로 →"}
         </button>
       </div>
     </form>
