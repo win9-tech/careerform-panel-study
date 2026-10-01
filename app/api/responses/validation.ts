@@ -4,9 +4,11 @@ export function validateSubmission(raw: unknown) {
   if (!raw || typeof raw !== "object") throw new Error("Invalid response");
   const x = raw as Record<string, any>;
   if (!uuid.test(x.id ?? "") || !["panel-study-v21", "panel-study-v22"].includes(x.version) || !Array.isArray(x.order) || x.order.length !== 3 || !sequences.has(x.order.join("")) || !Array.isArray(x.trials) || x.trials.length !== 3 || !["A","B","C","none"].includes(x.preference)) throw new Error("Incomplete response");
+  if (x.reason !== undefined && (typeof x.reason !== "string" || x.reason.length > 300)) throw new Error("Invalid feedback");
+  const reason = (x.reason ?? "").trim();
   const trials = x.trials.map((t: any, i: number) => {
     if (!t || t.variant !== x.order[i] || !t.ratings || !["comfort","trust","wait"].every(k => Number.isInteger(t.ratings[k]) && t.ratings[k]>=1 && t.ratings[k]<=5) || !Number.isFinite(t.durationMs) || t.durationMs<6615 || t.durationMs>3600000 || typeof t.reducedMotion !== "boolean") throw new Error("Invalid trial");
     return {variant:t.variant, ratings:{comfort:t.ratings.comfort,trust:t.ratings.trust,wait:t.ratings.wait},durationMs:t.durationMs,reducedMotion:t.reducedMotion};
   });
-  return {id:x.id as string,version:x.version as string,order:[...x.order] as string[],trials,preference:x.preference as string};
+  return {id:x.id as string,version:x.version as string,order:[...x.order] as string[],trials,preference:x.preference as string,...(reason ? {reason} : {})};
 }

@@ -1,7 +1,10 @@
+import { FinalSurvey } from "./FinalSurvey";
+import { createStudy } from "./study";
 import { LocalPreview } from "./LocalPreview";
 import { track } from "./analytics";
 import { createRoot } from "react-dom/client";
 import "../../src/styles/global.css";
 import { Experiment } from "./Experiment";
+document.documentElement.dataset.careerformStudy = "true";
 track("study_opened", {}, true);
-createRoot(document.getElementById("root")!).render(import.meta.env.DEV && new URLSearchParams(location.search).get("view") === "compare" ? <LocalPreview /> : <Experiment />);
+createRoot(document.getElementById("root")!).render(import.meta.env.DEV && new URLSearchParams(location.search).get("view") === "compare" ? <LocalPreview /> : import.meta.env.DEV && new URLSearchParams(location.search).get("view") === "feedback" ? <main style={{maxWidth:1200,margin:"24px auto",padding:20}}><p>로컬 시안 · 응답은 전송되지 않습니다</p><FinalSurvey study={createStudy(0)} onChange={() => {}} preview /></main> : <Experiment />);

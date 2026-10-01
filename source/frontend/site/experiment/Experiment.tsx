@@ -135,63 +135,26 @@ export function Experiment() {
     );
     reset();
   };
-  if (!introduced && study.trials.length === 0)
+  if (!introduced && (study.trials.length === 0 || (import.meta.env.DEV && new URLSearchParams(location.search).get("view") === "intro")))
     return (
       <main className={`${styles.page} ${styles.onboarding}`}>
         <div className={styles.introCard}>
           <p className={styles.eyebrow}>커리어폼 · 사용자 경험 조사</p>
           <h1>
-            지원서가 채워지는 동안,
-            <br />
-            어떤 화면이 편안한가요?
+            기다리는 동안,<br />어떤 느낌이 드나요?
           </h1>
-          <p>
-            자동입력을 기다릴 때 보이는 <strong>패널의 표현 방식</strong>을
-            비교하는 조사예요. 세 가지 화면을 체험하고 느낀 점을 알려주세요.
-          </p>
-          <div className={styles.focusDemo} aria-hidden="true">
-            <div>
-              지원서
-              <br />
-              <span>예제 정보가 자동으로 채워져요</span>
-            </div>
-            <div>
-              <strong>커리어폼 패널</strong>
-              <br />
-              <span>이쪽을 중심으로 봐주세요</span>
-              <i />
-            </div>
+          <p className={styles.introLead}>세 가지 대기 화면을 체험하고 평가해 주세요.</p>
+          <div className={styles.focusInstruction}>
+            <span className={styles.focusTag}>체험할 때는 이렇게</span>
+            <p><strong>‘자동 기입’을 누른 뒤,<br />사이드패널이 주는 느낌에 집중해 주세요.</strong></p>
+            <span>지원서가 채워지는 동안 패널을 지켜봐 주세요.</span>
           </div>
-          <ol className={styles.introSteps}>
-            <li>
-              <strong>패널 살펴보기</strong>
-              <span>
-                ‘자동 기입’을 누른 뒤 오른쪽 패널에 집중해 주세요. 좁은
-                화면에서는 지원서 아래에 있어요.
-              </span>
-            </li>
-            <li>
-              <strong>매번 짧게 평가하기</strong>
-              <span>
-                편안함, 진행에 대한 신뢰감, 기다림이 어떻게 느껴졌는지 답해
-                주세요.
-              </span>
-            </li>
-            <li>
-              <strong>마지막에 하나 선택하기</strong>
-              <span>
-                세 화면 중 가장 선호하는 것을 골라주세요. 차이 없어도 괜찮아요.
-              </span>
-            </li>
-          </ol>
-          <p className={styles.introNote}>
-            지원서보다 오른쪽 패널을 보며, 진행 상황을 얼마나 쉽게 파악할 수 있는지 체험해 주세요.
-            <br />약 2~3분 · 정답 없음 · 예제 정보만 사용 · 실제 지원서 제출 없음
-            <br />진행 단계는 서비스 개선을 위해 익명으로 분석합니다. 화면 녹화와 입력값 수집은 하지 않습니다.
-          </p>
+          <p className={styles.introSummary}>3가지 체험 <span>·</span> 약 1~2분 <span>·</span> 정답 없음</p>
           <button type="button" onClick={() => { track("study_started", {}, true); setIntroduced(true); }}>
-            안내를 읽었어요 · 체험 시작
+            체험 시작하기
           </button>
+          <p className={styles.introFootnote}>예제 정보로 진행하며 실제 지원서는 제출되지 않아요.</p>
+          <details className={styles.collectionNote}><summary>데이터 수집 안내</summary><p>평가 응답을 저장하고, 진행 단계는 익명으로 분석합니다. 화면 녹화와 입력값 수집은 하지 않습니다.</p></details>
         </div>
       </main>
     );

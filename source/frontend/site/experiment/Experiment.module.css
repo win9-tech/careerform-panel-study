@@ -1,5 +1,17 @@
-:global(body) {
-  overflow: auto;
+:global(html[data-careerform-study="true"]) {
+  height: auto;
+  min-height: 100%;
+  overflow-y: auto;
+}
+:global(html[data-careerform-study="true"] body) {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
+}
+:global(html[data-careerform-study="true"] #root) {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
 }
 .page {
   max-width: 1280px;
@@ -618,3 +630,39 @@
   z-index: 1;
   box-shadow: -12px 0 32px rgb(89 70 55 / 10%);
 }
+
+.introLead { color: var(--color-text-muted); font-size: 16px; margin: 12px 0 28px; }
+.focusInstruction { padding: 24px; margin: 28px 0; border-radius: 18px; background: #faf2e6; border: 1px solid #efdfc7; }
+.focusTag { display: inline-block; font-size: 12px; font-weight: 700; color: #885a2e; }
+.focusInstruction p { font-size: clamp(18px, 3vw, 22px); line-height: 1.65; margin: 10px 0; color: var(--color-text-strong); letter-spacing: -.5px; }
+.focusInstruction > span:last-child { font-size: 13px; color: var(--color-text-muted); }
+.introSummary { display: flex; justify-content: center; gap: 12px; font-size: 13px; color: var(--color-text-muted); margin: 24px 0 8px; }
+.introFootnote { text-align: center; font-size: 12px; color: var(--color-text-muted); margin: 14px 0 0; }
+.collectionNote { font-size: 12px; color: var(--color-text-muted); margin-top: 14px; text-align: center; }
+.collectionNote summary { cursor: pointer; }
+.collectionNote p { text-align: left; padding: 12px; background: var(--color-surface-muted); border-radius: 10px; }
+
+/* Compact introduction with one clear instruction and a single primary action. */
+.onboarding { padding: clamp(24px, 6vh, 64px) 20px; background: #faf7f2; }
+.introCard { max-width: 620px; padding: clamp(24px, 5vw, 44px); border-color: #ece3d6; box-shadow: 0 12px 40px rgb(89 70 55 / 5%); }
+.introCard .eyebrow { display: inline-block; margin: 0 0 8px; padding: 5px 10px; border-radius: 8px; background: #f5ede1; font-size: 12px; letter-spacing: 0; }
+.introCard h1 { margin: 16px 0 12px; font-size: clamp(27px, 4vw, 34px); line-height: 1.4; letter-spacing: -1.2px; }
+.introLead { margin-top: 0; font-size: 15px; }
+.focusInstruction { margin: 26px 0; padding: 22px 24px; border: 1px solid #edddc7; border-left: 1px solid #edddc7; background: linear-gradient(120deg, #faf1e4, #fdf9f3); border-radius: 16px; }
+.focusTag { font-size: 11px; letter-spacing: .04em; }
+.focusInstruction p { margin: 10px 0 8px; font-size: clamp(18px, 3vw, 21px); }
+.introSummary { gap: 14px; margin: 22px 0 10px; }
+.introSummary > span { color: #c7b9a6; }
+.introCard > button { min-height: 54px; margin-top: 8px; font-size: 16px; border-radius: 12px; box-shadow: 0 4px 10px rgb(89 70 55 / 10%); transition: background 150ms, box-shadow 150ms; }
+.introCard > button:hover { background: var(--color-action-strong); box-shadow: 0 6px 16px rgb(89 70 55 / 14%); }
+.introCard > button:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 4px; }
+.introFootnote { margin-top: 16px; font-size: 11px; }
+.collectionNote { padding-top: 14px; margin-top: 18px; border-top: 1px solid #f0e9df; font-size: 11px; }
+
+.feedbackLabel { display: block; margin-top: 28px; font-size: 16px; font-weight: 600; }
+.feedbackLabel > span { font-size: 13px; font-weight: 400; color: var(--color-text-muted); }
+.feedbackLabel textarea { display: block; width: 100%; box-sizing: border-box; margin-top: 10px; padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 12px; background: #fffdf9; font: inherit; font-weight: 400; font-size: 14px; line-height: 1.6; resize: vertical; color: var(--color-text-strong); }
+.feedbackLabel textarea:focus-visible { outline: 2px solid var(--color-action); outline-offset: 2px; }
+.feedbackLabel small { display: block; margin-top: 7px; font-size: 12px; font-weight: 400; color: var(--color-text-muted); }
+
+.finalSurvey { padding-bottom: max(40px, env(safe-area-inset-bottom)); }

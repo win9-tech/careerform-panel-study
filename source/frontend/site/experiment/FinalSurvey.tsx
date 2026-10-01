@@ -7,14 +7,16 @@ const ordinals = ["첫 번째", "두 번째", "세 번째"];
 export function FinalSurvey({
   study,
   onChange,
+  preview = false,
 }: {
   study: Study;
+  preview?: boolean;
   onChange: (preference: Preference, reason: string) => void;
 }) {
   const [preference, setPreference] = useState<Preference | "">(
     study.final?.preference ?? "",
   );
-  const reason = "";
+  const [reason, setReason] = useState(study.final?.reason ?? "");
   const [message, setMessage] = useState("");
   const heading = useRef<HTMLHeadingElement>(null);
   const [saving, setSaving] = useState(false);
@@ -24,6 +26,7 @@ export function FinalSurvey({
   const submission = useRef<Record<string, unknown> | null>(null);
   useEffect(() => {
     heading.current?.focus();
+    if (preview) return;
     try {
       const cached = sessionStorage.getItem(`${study.version}-submission`);
       if (cached) {
@@ -31,12 +34,14 @@ export function FinalSurvey({
         if (JSON.stringify(payload.trials) === JSON.stringify(study.trials) && JSON.stringify(payload.order) === JSON.stringify(study.order)) {
           submission.current = payload;
           setPreference(payload.preference);
+          setReason(payload.reason ?? "");
           setLocked(true);
         } else sessionStorage.removeItem(`${study.version}-submission`);
       }
     } catch { /* Storage may be unavailable. */ }
   }, []);
   const submit = async () => {
+    if (preview) { setMessage("로컬 시안입니다. 응답은 전송되지 않아요."); return; }
     if (!preference || sending.current || saved) return;
     track("response_submit_started");
     sending.current = true; setSaving(true); setLocked(true); setMessage("");
@@ -124,6 +129,20 @@ export function FinalSurvey({
             }}
           />
           차이 없음
+        </label>
+        <label className={styles.feedbackLabel}>
+          한 줄 의견 <span>(선택)</span>
+          <textarea
+            value={reason}
+            maxLength={300}
+            rows={3}
+            placeholder="좋았던 점이나 아쉬웠던 점을 자유롭게 남겨주세요."
+            onChange={(event) => {
+              setReason(event.target.value);
+              if (preference) onChange(preference, event.target.value);
+            }}
+          />
+          <small>개인정보는 적지 말아 주세요. · {reason.length}/300</small>
         </label>
       </fieldset>
       <p>
